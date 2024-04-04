@@ -75,7 +75,7 @@ const Comment = ({ comment, currentUser, replyingTo, onReply }) => {
   };
 
   return (
-    <div>
+    <div className=" bg-white text-slate-500">
       <div>
         <Image
           src={testImg}
@@ -84,9 +84,11 @@ const Comment = ({ comment, currentUser, replyingTo, onReply }) => {
           height={30}
           className="flex w-6"
         />
-        <span>{comment.user.username}</span>
+        <span className=" text-black font-semibold">
+          {comment.user.username}
+        </span>
         <span>{comment.createdAt}</span>
-        <span>Score: {comment.score}</span>
+        <span> {comment.score}</span>
       </div>
       {editing ? (
         <div>
