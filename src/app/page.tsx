@@ -30,7 +30,7 @@ export default function Home() {
   }, [getItem, setItem]);
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24 bg-slate-100">
+    <div className="flex min-h-screen flex-col items-center justify-between p-24 bg-slate-100">
       {commentsLoaded ? (
         <div className="w-full items-center justify-center">
           <Comments />
@@ -55,6 +55,6 @@ export default function Home() {
         </a>
         .
       </div>
-    </main>
+    </div>
   );
 }

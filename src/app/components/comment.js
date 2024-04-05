@@ -6,8 +6,9 @@ import testImg from "../../../images/avatars/image-amyrobson.png";
 
 const Comment = ({ comment, currentUser, replyingTo, onReply }) => {
   const [replyText, setReplyText] = useState("");
-  const userImg = "/../." + comment.user.image.png;
-  const currentUserImg = "/../." + currentUser.image.webp;
+  const userImg = "." + comment.user.image.png;
+  const currentUserImg = currentUser.image.png;
+  const currentUserImg2 = currentUserImg.substring(1);
 
   const [editing, setEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(comment.content);
