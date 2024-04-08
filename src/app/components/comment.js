@@ -3,6 +3,9 @@
 import Image from "next/image";
 import React, { useState } from "react";
 import testImg from "../../../images/avatars/image-amyrobson.png";
+import scoreUp from "../../../images/icon-plus.svg";
+import scoreDown from "../../../images/icon-minus.svg";
+import replyArrow from "../../../images/icon-reply.svg";
 
 const Comment = ({ comment, currentUser, replyingTo, onReply }) => {
   const [replyText, setReplyText] = useState("");
@@ -76,60 +79,105 @@ const Comment = ({ comment, currentUser, replyingTo, onReply }) => {
   };
 
   return (
-    <div className=" bg-white text-slate-500">
-      <div>
-        <Image
-          src={testImg}
-          alt="img not found"
-          width={30}
-          height={30}
-          className="flex w-6"
-        />
-        <span className=" text-black font-semibold">
-          {comment.user.username}
-        </span>
-        <span>{comment.createdAt}</span>
-        <span> {comment.score}</span>
-      </div>
-      {editing ? (
-        <div>
-          <textarea
-            value={editedContent}
-            onChange={(e) => setEditedContent(e.target.value)}
-          />
-          <button onClick={handleSaveEdit}>Save</button>
-        </div>
-      ) : (
-        <div>
-          <p>{comment.content}</p>
-          {currentUser.username === comment.user.username && (
-            <>
-              <button onClick={handleEdit}>Edit</button>
-              <button onClick={handleDelete}>Delete</button>
-            </>
-          )}
-          <button onClick={handleReply}>Reply</button>
-        </div>
-      )}
-      {replyingTo === comment.user.username && (
-        <div>
-          <div>
+    <div className="  text-slate-500  my-2">
+      <div className="bg-white rounded-lg grid grid-flow-col w-[750px]">
+        <div className="flex flex-col bg-slate-100 w-9 justify-items-center rounded-lg mx-2 my-8 text-blue-600 font-bold">
+          <button className=" w-5 h-5">
             <Image
-              src={currentUserImg}
+              src={scoreUp}
+              alt="img not found"
+              width={30}
+              height={30}
+              className=" w-4 h-auto"
+            />
+          </button>
+          <span> {comment.score}</span>
+          <button className=" w-5 h-5">
+            <Image
+              src={scoreDown}
+              alt="img not found"
+              width={30}
+              height={30}
+              className=" w-4 h-auto"
+            />
+          </button>
+        </div>
+        <div className="p-3 max-w-[650px]">
+          <div className="flex flex-row h-7">
+            <Image
+              src={testImg}
+              alt="img not found"
+              width={30}
+              height={30}
+              className="flex w-6 h-6 "
+            />
+            <span className=" text-black font-semibold ml-5">
+              {comment.user.username}
+            </span>
+            <span className="ml-5">{comment.createdAt}</span>
+            <div className=" justify-self-end flex flex-row items-center  h-7">
+              <Image
+                src={replyArrow}
+                alt="img not found"
+                width={30}
+                height={30}
+                className="flex w-4 h-4 "
+              />
+              <button
+                className=" font-bold text-blue-600 h-7 "
+                onClick={handleReply}
+              >
+                Reply
+              </button>
+            </div>
+          </div>
+          {editing ? (
+            <div>
+              <textarea
+                value={editedContent}
+                onChange={(e) => setEditedContent(e.target.value)}
+              />
+              <button onClick={handleSaveEdit}>Save</button>
+            </div>
+          ) : (
+            <div>
+              <p>{comment.content}</p>
+              {currentUser.username === comment.user.username && (
+                <>
+                  <button onClick={handleEdit}>Edit</button>
+                  <button onClick={handleDelete}>Delete</button>
+                </>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {replyingTo === comment.user.username && (
+        <div className="bg-white rounded-lg grid grid-flow-col w-[750px] my-2 p-5">
+          <div className="">
+            <Image
+              src={testImg}
               alt="img not found"
               width={50}
               height={50}
+              className="w-10 h-auto"
             />
           </div>
-          <div>
-            <input
-              type="text"
-              value={replyText}
-              onChange={(e) => setReplyText(e.target.value)}
-              placeholder={`Replying to ${replyingTo}`}
-            />
-            <button onClick={handleSendReply}>Send</button>
-          </div>
+
+          <input
+            type="text"
+            value={replyText}
+            onChange={(e) => setReplyText(e.target.value)}
+            placeholder={`Replying to ${replyingTo}`}
+            className=" min-h-[100px] w-[550px] border-2 border-purple-800 rounded-lg"
+          />
+          <button
+            className=" bg-blue-600 rounded-lg w-[90px] h-[40px] text-white"
+            onClick={handleSendReply}
+          >
+            Send
+          </button>
         </div>
       )}
     </div>
