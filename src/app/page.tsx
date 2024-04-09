@@ -32,7 +32,7 @@ export default function Home() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-between p-24 bg-slate-100">
       {commentsLoaded ? (
-        <div className="w-full items-center justify-center">
+        <div className="w-full items-center justify-center place-items-center">
           <Comments />
         </div>
       ) : (

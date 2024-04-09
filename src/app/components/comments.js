@@ -23,15 +23,38 @@ const Comments = () => {
   };
 
   return (
-    <div>
+    <div className="flex flex-col place-items-center">
       {comments.map((comment) => (
-        <Comment
-          key={comment.id}
-          comment={comment}
-          currentUser={currentUser}
-          replyingTo={replyingTo}
-          onReply={handleReply}
-        />
+        <div className="flex flex-col  place-items-end">
+          <Comment
+            key={comment.id}
+            comment={comment}
+            currentUser={currentUser}
+            replyingTo={replyingTo}
+            onReply={handleReply}
+          />
+          {comment.replies.length > 1 ? (
+            <div className="flex  flex-col">
+              {comment.replies.map((reply) => (
+                <div className="flex flex-row">
+                  <div className=" bg-slate-300 w-1 mx-5"></div>
+
+                  <div className="w-[650px]">
+                    <Comment
+                      key={reply.id}
+                      comment={reply}
+                      currentUser={currentUser}
+                      replyingTo={reply.replyingTo}
+                      onReply={handleReply}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <></>
+          )}
+        </div>
       ))}
     </div>
   );
