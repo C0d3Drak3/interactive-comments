@@ -22,6 +22,29 @@ const Comments = () => {
     setReplyingTo(username);
   };
 
+  const handleSendReply = (commentId, newReply) => {
+    // Actualizar los comentarios en el estado
+    const updatedComments = comments.map((comment) => {
+      if (comment.id === commentId) {
+        return {
+          ...comment,
+          replies: [...(comment.replies || []), newReply],
+        };
+      }
+      return comment;
+    });
+    setComments(updatedComments);
+
+    // Guardar los comentarios actualizados en el localStorage
+    localStorage.setItem(
+      "myData",
+      JSON.stringify({
+        ...JSON.parse(localStorage.getItem("myData")),
+        comments: updatedComments,
+      })
+    );
+  };
+
   return (
     <div className="flex flex-col place-items-center">
       {comments.map((comment) => (
@@ -32,6 +55,7 @@ const Comments = () => {
             currentUser={currentUser}
             replyingTo={replyingTo}
             onReply={handleReply}
+            onSendReply={handleSendReply}
           />
           {comment.replies.length > 1 ? (
             <div className="flex  flex-col">
@@ -46,6 +70,7 @@ const Comments = () => {
                       currentUser={currentUser}
                       replyingTo={reply.replyingTo}
                       onReply={handleReply}
+                      onSendReply={handleSendReply}
                     />
                   </div>
                 </div>

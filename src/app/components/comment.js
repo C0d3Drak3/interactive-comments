@@ -9,7 +9,13 @@ import replyArrow from "../../../images/icon-reply.svg";
 import editIco from "../../../images/icon-edit.svg";
 import deleteIco from "../../../images/icon-delete.svg";
 
-const Comment = ({ comment, currentUser, replyingTo, onReply }) => {
+const Comment = ({
+  comment,
+  currentUser,
+  replyingTo,
+  onReply,
+  onSendReply,
+}) => {
   const [replyText, setReplyText] = useState("");
   const userImg = "." + comment.user.image.png;
   const currentUserImg = currentUser.image.png;
@@ -34,9 +40,10 @@ const Comment = ({ comment, currentUser, replyingTo, onReply }) => {
 
   const handleReply = () => {
     onReply(comment.user.username);
+    //corregir esto
   };
 
-  const handleSendReply = () => {
+  /* const handleSendReply = () => {
     console.log("inicia el handleReply");
     const now = new Date().toISOString();
     const newReply = {
@@ -79,6 +86,26 @@ const Comment = ({ comment, currentUser, replyingTo, onReply }) => {
 
     // Limpiar el texto de la respuesta después de enviarla
     setReplyText("");
+  }; */
+
+  const handleSendReply = () => {
+    // Crear la nueva respuesta
+    const now = new Date().toISOString();
+    const newReply = {
+      id: Date.now(),
+      content: replyText,
+      createdAt: now,
+      score: 0,
+      user: currentUser,
+    };
+
+    // Llamar a la función proporcionada desde Comments para enviar la respuesta
+    onSendReply(comment.id, newReply);
+
+    // Limpiar el texto de la respuesta después de enviarla
+    setReplyText("");
+    // Cerrar el cuadro de respuesta
+    onReply(null);
   };
 
   return (
