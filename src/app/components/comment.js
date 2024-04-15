@@ -15,6 +15,7 @@ const Comment = ({
   replyingTo,
   onReply,
   onSendReply,
+  parentCommentId,
 }) => {
   const [replyText, setReplyText] = useState("");
   const userImg = "." + comment.user.image.png;
@@ -22,6 +23,7 @@ const Comment = ({
   const currentUserImg2 = currentUserImg.substring(1);
   //arreglar para poder mostrar avatares correctamente
 
+  const [isReplying, setIsReplying] = useState(false); //Reply, estado para manejar el cuadro de respuesta
   const [editing, setEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(comment.content);
 
@@ -39,73 +41,39 @@ const Comment = ({
   };
 
   const handleReply = () => {
-    onReply(comment.user.username);
-    //corregir esto
-  };
-
-  /* const handleSendReply = () => {
-    console.log("inicia el handleReply");
-    const now = new Date().toISOString();
-    const newReply = {
-      id: Date.now(), // Id único
-      content: replyText,
-      createdAt: now,
-      score: 0,
-      user: currentUser,
-    };
-
-    // Obtener los comentarios actuales del localStorage
-    const currentComments = JSON.parse(localStorage.getItem("myData")).comments;
-    console.log("Primer paso, cargo los comentarios locales en una constante");
-    // Buscar el comentario principal al que se responde
-    const parentCommentIndex = currentComments.findIndex(
-      (c) => c.id === comment.id
-    );
-    console.log("Segundo paso, cargo el comentario al que estoy respondiendo");
-
-    if (parentCommentIndex !== -1) {
-      // Si se encuentra el comentario principal
-      // Agregar la nueva respuesta al array replies del comentario principal
-      if (!currentComments[parentCommentIndex].replies) {
-        currentComments[parentCommentIndex].replies = [newReply];
-        console.log("Tercero paso, creo una nueva reply");
-      } else {
-        currentComments[parentCommentIndex].replies.push(newReply);
-        console.log("Tercero, pusheo la nueva reply");
-      }
+    setIsReplying(true); //Reply , cambio el estado
+    if (isReplying) {
+      setIsReplying(false);
     }
-
-    // Actualizar los comentarios en el localStorage
-    localStorage.setItem(
-      "myData",
-      JSON.stringify({
-        ...JSON.parse(localStorage.getItem("myData")),
-        comments: currentComments,
-      })
-    );
-
-    // Limpiar el texto de la respuesta después de enviarla
-    setReplyText("");
-  }; */
+    onReply(comment.id); //puede ser comment.user.username
+    console.log("respondiendo al usuario: " + comment.user.username);
+  };
 
   const handleSendReply = () => {
     // Crear la nueva respuesta
-    const now = new Date().toISOString();
+    const now = new Date().toLocaleDateString("en-us", {
+      weekday: "long",
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
     const newReply = {
       id: Date.now(),
       content: replyText,
       createdAt: now,
       score: 0,
+      replyingTo: comment.user.username,
       user: currentUser,
     };
-
+    console.log("se crea la reply a:  " + newReply.replyingTo);
     // Llamar a la función proporcionada desde Comments para enviar la respuesta
-    onSendReply(comment.id, newReply);
+    onSendReply(parentCommentId, newReply);
 
     // Limpiar el texto de la respuesta después de enviarla
     setReplyText("");
     // Cerrar el cuadro de respuesta
-    onReply(null);
+    //onReply(null);
+    setIsReplying(false);
   };
 
   return (
@@ -225,7 +193,7 @@ const Comment = ({
         </div>
       </div>
 
-      {replyingTo === comment.user.username && (
+      {isReplying && (
         <div className="bg-white rounded-lg grid grid-flow-col w-[750px] my-2 p-5">
           <div className="">
             <Image
@@ -241,7 +209,7 @@ const Comment = ({
             type="text"
             value={replyText}
             onChange={(e) => setReplyText(e.target.value)}
-            placeholder={`Replying to ${replyingTo}`}
+            placeholder={`Replying to ${comment.user.username}`}
             className=" min-h-[100px] w-[550px] border-2 border-purple-800 rounded-lg"
           />
           <button

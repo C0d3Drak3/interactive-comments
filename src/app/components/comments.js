@@ -4,7 +4,7 @@ import Comment from "./comment.js";
 import { useLocalStorage } from "./useLocalStorage";
 
 const Comments = () => {
-  const { getItem } = useLocalStorage("myData");
+  const { getItem, setItem } = useLocalStorage("myData");
   const [currentUser, setCurrentUser] = useState(null);
   const [comments, setComments] = useState([]);
 
@@ -20,29 +20,29 @@ const Comments = () => {
 
   const handleReply = (username) => {
     setReplyingTo(username);
+    console.log("respuesta a " + username);
   };
 
-  const handleSendReply = (commentId, newReply) => {
-    // Actualizar los comentarios en el estado
-    const updatedComments = comments.map((comment) => {
-      if (comment.id === commentId) {
-        return {
-          ...comment,
-          replies: [...(comment.replies || []), newReply],
-        };
-      }
-      return comment;
-    });
-    setComments(updatedComments);
-
-    // Guardar los comentarios actualizados en el localStorage
-    localStorage.setItem(
-      "myData",
-      JSON.stringify({
-        ...JSON.parse(localStorage.getItem("myData")),
-        comments: updatedComments,
-      })
+  const handleSendReply = (parentCommentId, newReply) => {
+    // Find the parent comment
+    console.log("Handle Send Reply to:" + parentCommentId);
+    const parentComment = comments.find(
+      (comment) => comment.id === parentCommentId
     );
+    if (parentComment) {
+      // Add the new reply to the parent comment's replies
+      const updatedParentComment = {
+        ...parentComment,
+        replies: [...(parentComment.replies || []), newReply],
+      };
+      // Update the comments array with the modified parent comment
+      const updatedComments = comments.map((comment) =>
+        comment.id === parentCommentId ? updatedParentComment : comment
+      );
+      setComments(updatedComments);
+      // Save the updated comments to localStorage
+      setItem({ ...getItem(), comments: updatedComments });
+    }
   };
 
   return (
@@ -54,10 +54,11 @@ const Comments = () => {
             comment={comment}
             currentUser={currentUser}
             replyingTo={replyingTo}
+            parentCommentId={comment.id}
             onReply={handleReply}
             onSendReply={handleSendReply}
           />
-          {comment.replies.length > 1 ? (
+          {comment.replies.length > 0 ? (
             <div className="flex  flex-col">
               {comment.replies.map((reply) => (
                 <div className="flex flex-row">
@@ -69,6 +70,7 @@ const Comments = () => {
                       comment={reply}
                       currentUser={currentUser}
                       replyingTo={reply.replyingTo}
+                      parentCommentId={comment.id}
                       onReply={handleReply}
                       onSendReply={handleSendReply}
                     />
