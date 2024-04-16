@@ -12,10 +12,11 @@ import deleteIco from "../../../images/icon-delete.svg";
 const Comment = ({
   comment,
   currentUser,
-  replyingTo,
   onReply,
   onSendReply,
   parentCommentId,
+  onEditComment,
+  onDeleteComment,
 }) => {
   const [replyText, setReplyText] = useState("");
   const userImg = "." + comment.user.image.png;
@@ -26,18 +27,36 @@ const Comment = ({
   const [isReplying, setIsReplying] = useState(false); //Reply, estado para manejar el cuadro de respuesta
   const [editing, setEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(comment.content);
+  const [showModal, setShowModal] = useState(false);
 
   const handleEdit = () => {
     setEditing(true);
   };
 
   const handleSaveEdit = () => {
-    // Lógica para guardar la edición del comentario
+    console.log("Edicion del mensaje a:" + editedContent);
+    // Llamar a la función proporcionada desde Comments para guardar la edición del comentario
+    onEditComment(comment.id, editedContent);
+
+    // Cerrar el cuadro de edición
     setEditing(false);
   };
 
   const handleDelete = () => {
     // Lógica para eliminar el comentario
+    setShowModal(true);
+  };
+
+  const handleConfirmDelete = () => {
+    // Llamar a la función proporcionada para eliminar el comentario
+    onDeleteComment(comment.id);
+    // Cerrar el modal después de confirmar el delete
+    setShowModal(false);
+  };
+
+  const handleCancelDelete = () => {
+    // Cerrar el modal sin eliminar el comentario
+    setShowModal(false);
   };
 
   const handleReply = () => {
@@ -72,7 +91,6 @@ const Comment = ({
     // Limpiar el texto de la respuesta después de enviarla
     setReplyText("");
     // Cerrar el cuadro de respuesta
-    //onReply(null);
     setIsReplying(false);
   };
 
@@ -152,6 +170,14 @@ const Comment = ({
                   >
                     Delete
                   </button>
+                  {/* Renderizar el modal de confirmación */}
+                  {showModal && (
+                    <div className="absolute z-10 border-2 border-black w-96 h-40">
+                      <p>Are you sure you want to delete this comment?</p>
+                      <button onClick={handleConfirmDelete}>Yes</button>
+                      <button onClick={handleCancelDelete}>Cancel</button>
+                    </div>
+                  )}
                 </div>
                 <div className="  flex flex-row items-center place-self-end  h-7 mx-2">
                   <Image
