@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import testImg from "../../../images/avatars/image-amyrobson.png";
 import scoreUp from "../../../images/icon-plus.svg";
 import scoreDown from "../../../images/icon-minus.svg";
@@ -17,6 +17,7 @@ const Comment = ({
   parentCommentId,
   onEditComment,
   onDeleteComment,
+  onVoteComment,
 }) => {
   const [replyText, setReplyText] = useState("");
   const userImg = "." + comment.user.image.png;
@@ -28,6 +29,41 @@ const Comment = ({
   const [editing, setEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(comment.content);
   const [showModal, setShowModal] = useState(false);
+  const [upvoted, setUpvoted] = useState(false);
+  const [downvoted, setDownvoted] = useState(false);
+
+  useEffect(() => {
+    // Verificar si el usuario actual ya votó por este comentario
+    const userVote = currentUser.votes.find(
+      (vote) => vote.commentId === comment.id
+    );
+
+    if (userVote) {
+      if (userVote.voted === "up") {
+        setUpvoted(true);
+        setDownvoted(false);
+      } else if (userVote.voted === "down") {
+        setDownvoted(true);
+        setUpvoted(false);
+      }
+    }
+  }, [comment.id, currentUser.votes]);
+
+  const handleUpvote = () => {
+    if (!upvoted) {
+      onVoteComment(comment.id, "up");
+      setUpvoted(true);
+      setDownvoted(false);
+    }
+  };
+
+  const handleDownvote = () => {
+    if (!downvoted) {
+      onVoteComment(comment.id, "down");
+      setDownvoted(true);
+      setUpvoted(false);
+    }
+  };
 
   const handleEdit = () => {
     setEditing(true);
@@ -98,7 +134,11 @@ const Comment = ({
     <div className="  text-slate-500  my-2">
       <div className="bg-white rounded-lg grid grid-flow-col max-w-[750px]">
         <div className="grid grid-col bg-slate-100 w-9 h-[70px] content-center place-items-center justify-items-center rounded-lg mx-2 my-8 text-blue-600 font-bold">
-          <button className=" w-5 h-5">
+          <button
+            className=" w-5 h-5"
+            onClick={handleUpvote}
+            disabled={upvoted}
+          >
             <Image
               src={scoreUp}
               alt="img not found"
@@ -108,7 +148,11 @@ const Comment = ({
             />
           </button>
           <span> {comment.score}</span>
-          <button className=" w-5 h-5">
+          <button
+            className=" w-5 h-5"
+            onClick={handleDownvote}
+            disabled={downvoted}
+          >
             <Image
               src={scoreDown}
               alt="img not found"

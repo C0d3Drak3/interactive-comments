@@ -17,6 +17,61 @@ const Comments = () => {
     }
   }, []);
 
+  const handleVoteComment = (commentId, voteType) => {
+    // Verificar si el usuario actual ha votado por el comentario
+    const currentUserVotes = currentUser.votes || [];
+    const existingVoteIndex = currentUserVotes.findIndex(
+      (vote) => vote.commentId === commentId
+    );
+
+    if (existingVoteIndex === -1) {
+      // Si el usuario no ha votado, actualizar el score del comentario y agregar el voto del usuario
+      const updatedComments = comments.map((comment) => {
+        if (comment.id === commentId) {
+          // Incrementar o decrementar el score del comentario según el tipo de voto
+          const newScore =
+            voteType === "up" ? comment.score + 1 : comment.score - 1;
+          return { ...comment, score: newScore };
+        }
+        return comment;
+      });
+
+      // Agregar el voto del usuario al array de votos del currentUser
+      const updatedUserVotes = [
+        ...currentUserVotes,
+        { commentId, voted: voteType },
+      ];
+      // Actualizar el estado de los comentarios y el currentUser
+      setComments(updatedComments);
+      setCurrentUser({ ...currentUser, votes: updatedUserVotes });
+      // Guardar los cambios en el localStorage
+      setItem({ ...getItem(), comments: updatedComments });
+    } else {
+      // Si el usuario ya ha votado, actualizar el score del comentario y ajustar el voto del usuario
+      const updatedComments = comments.map((comment) => {
+        if (comment.id === commentId) {
+          // Incrementar o decrementar el score del comentario según el cambio de voto
+          const newScore =
+            voteType === "up" ? comment.score + 2 : comment.score - 2;
+          return { ...comment, score: newScore };
+        }
+        return comment;
+      });
+
+      // Actualizar el voto del usuario en el array de votos del currentUser
+      const updatedUserVotes = [...currentUserVotes];
+      updatedUserVotes[existingVoteIndex] = {
+        ...updatedUserVotes[existingVoteIndex],
+        voted: voteType,
+      };
+      // Actualizar el estado de los comentarios y el currentUser
+      setComments(updatedComments);
+      setCurrentUser({ ...currentUser, votes: updatedUserVotes });
+      // Guardar los cambios en el localStorage
+      setItem({ ...getItem(), comments: updatedComments });
+    }
+  };
+
   const handleEditComment = (commentId, editedContent) => {
     // Buscar el comentario en el array de comentarios
     const updatedComments = comments.map((comment) => {
@@ -128,6 +183,7 @@ const Comments = () => {
             onSendReply={handleSendReply}
             onEditComment={handleEditComment}
             onDeleteComment={handleDeleteComment}
+            onVoteComment={handleVoteComment}
           />
           {comment.replies.length > 0 ? (
             <div className="flex  flex-col">
@@ -145,6 +201,7 @@ const Comments = () => {
                       onSendReply={handleSendReply}
                       onEditComment={handleEditComment}
                       onDeleteComment={handleDeleteComment}
+                      onVoteComment={handleVoteComment}
                     />
                   </div>
                 </div>

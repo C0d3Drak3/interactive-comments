@@ -16,6 +16,8 @@ export default function Home() {
       fetch("/data.json") // Ruta del archivo JSON
         .then((response) => response.json())
         .then((data) => {
+          // Agregar la propiedad "votes" al currentUser con valor inicial de un objeto vacío
+          data.currentUser.votes = [];
           // Almacenar los datos en el localStorage
           setItem(data);
           console.log("Data loaded correctly");
