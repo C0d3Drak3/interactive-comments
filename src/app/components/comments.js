@@ -18,58 +18,89 @@ const Comments = () => {
   }, []);
 
   const handleVoteComment = (commentId, voteType) => {
-    // Verificar si el usuario actual ha votado por el comentario
+    // Verificar si el usuario actual ha votado por el comentario principal
     const currentUserVotes = currentUser.votes || [];
-    const existingVoteIndex = currentUserVotes.findIndex(
+    const existingVote = currentUserVotes.find(
       (vote) => vote.commentId === commentId
     );
 
-    if (existingVoteIndex === -1) {
-      // Si el usuario no ha votado, actualizar el score del comentario y agregar el voto del usuario
-      const updatedComments = comments.map((comment) => {
+    // Función para actualizar los votos en el comentario principal y sus respuestas
+    const updateVotes = (comments) => {
+      return comments.map((comment) => {
+        // Verificar si el comentario actual es el comentario principal
         if (comment.id === commentId) {
-          // Incrementar o decrementar el score del comentario según el tipo de voto
-          const newScore =
-            voteType === "up" ? comment.score + 1 : comment.score - 1;
-          return { ...comment, score: newScore };
+          // Determinar el incremento o decremento del puntaje del comentario
+          let scoreChange = 0;
+          if (!existingVote) {
+            // Si el usuario no ha votado antes por este comentario, aplicar +1 o -1
+            scoreChange = voteType === "up" ? 1 : -1;
+          } else if (existingVote.voted !== voteType) {
+            // Si el usuario cambia su voto, aplicar +2 o -2
+            scoreChange = voteType === "up" ? 2 : -2;
+          }
+          // Actualizar el voto del comentario principal
+          const updatedComment = {
+            ...comment,
+            score: comment.score + scoreChange,
+          };
+          return updatedComment;
         }
+        // Verificar si el comentario actual tiene respuestas
+        if (comment.replies && comment.replies.length > 0) {
+          // Actualizar el voto en las respuestas correspondientes
+          const updatedReplies = comment.replies.map((reply) => {
+            if (reply.id === commentId) {
+              // Actualizar el voto de la respuesta
+              let scoreChange = 0;
+              if (!existingVote) {
+                // Si el usuario no ha votado antes por este comentario, aplicar +1 o -1
+                scoreChange = voteType === "up" ? 1 : -1;
+              } else if (existingVote.voted !== voteType) {
+                // Si el usuario cambia su voto, aplicar +2 o -2
+                scoreChange = voteType === "up" ? 2 : -2;
+              }
+              return {
+                ...reply,
+                score: reply.score + scoreChange,
+              };
+            }
+            return reply;
+          });
+          // Devolver el comentario actualizado con las respuestas actualizadas
+          return {
+            ...comment,
+            replies: updatedReplies,
+          };
+        }
+        // Devolver el comentario sin cambios si no es el comentario principal ni tiene respuestas
         return comment;
       });
+    };
 
-      // Agregar el voto del usuario al array de votos del currentUser
-      const updatedUserVotes = [
-        ...currentUserVotes,
-        { commentId, voted: voteType },
-      ];
-      // Actualizar el estado de los comentarios y el currentUser
-      setComments(updatedComments);
-      setCurrentUser({ ...currentUser, votes: updatedUserVotes });
-      // Guardar los cambios en el localStorage
-      setItem({ ...getItem(), comments: updatedComments });
+    // Actualizar los votos en los comentarios y respuestas
+    const updatedComments = updateVotes(comments);
+
+    // Actualizar el voto del usuario en el array de votos del currentUser
+    let updatedUserVotes;
+    if (!existingVote) {
+      updatedUserVotes = [...currentUserVotes, { commentId, voted: voteType }];
     } else {
-      // Si el usuario ya ha votado, actualizar el score del comentario y ajustar el voto del usuario
-      const updatedComments = comments.map((comment) => {
-        if (comment.id === commentId) {
-          // Incrementar o decrementar el score del comentario según el cambio de voto
-          const newScore =
-            voteType === "up" ? comment.score + 2 : comment.score - 2;
-          return { ...comment, score: newScore };
-        }
-        return comment;
-      });
-
-      // Actualizar el voto del usuario en el array de votos del currentUser
-      const updatedUserVotes = [...currentUserVotes];
-      updatedUserVotes[existingVoteIndex] = {
-        ...updatedUserVotes[existingVoteIndex],
-        voted: voteType,
-      };
-      // Actualizar el estado de los comentarios y el currentUser
-      setComments(updatedComments);
-      setCurrentUser({ ...currentUser, votes: updatedUserVotes });
-      // Guardar los cambios en el localStorage
-      setItem({ ...getItem(), comments: updatedComments });
+      // Si el usuario ya ha votado, actualizar su voto
+      updatedUserVotes = currentUserVotes.map((vote) =>
+        vote.commentId === commentId ? { ...vote, voted: voteType } : vote
+      );
     }
+
+    // Actualizar el estado de los comentarios y el currentUser
+    setComments(updatedComments);
+    setCurrentUser({ ...currentUser, votes: updatedUserVotes });
+
+    // Guardar los cambios en el localStorage
+    setItem({
+      ...getItem(),
+      comments: updatedComments,
+      currentUser: { ...currentUser, votes: updatedUserVotes },
+    });
   };
 
   const handleEditComment = (commentId, editedContent) => {
