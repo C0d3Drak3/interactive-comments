@@ -96,12 +96,11 @@ const Comment = ({
   };
 
   const handleReply = () => {
-    setIsReplying(true); //Reply , cambio el estado
     if (isReplying) {
       setIsReplying(false);
+    } else {
+      setIsReplying(true);
     }
-    onReply(comment.id); //puede ser comment.user.username
-    console.log("respondiendo al usuario: " + comment.user.username);
   };
 
   const handleSendReply = () => {
@@ -241,6 +240,7 @@ const Comment = ({
               </>
             )}
           </div>
+          {/*EDIT */}
           {editing ? (
             <div>
               <textarea
@@ -257,12 +257,16 @@ const Comment = ({
             </div>
           ) : (
             <div>
-              <p>{comment.content}</p>
+              <p>
+                {comment.replyingTo
+                  ? `@${comment.replyingTo} ` + comment.content
+                  : comment.content}
+              </p>
             </div>
           )}
         </div>
       </div>
-
+      {/*REPLY */}
       {isReplying && (
         <div className="bg-white rounded-lg grid grid-flow-col w-[750px] my-2 p-5">
           <div className="">

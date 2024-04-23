@@ -1,13 +1,13 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Comment from "./comment.js";
+import NewComment from "./newComment.js";
 import { useLocalStorage } from "./useLocalStorage";
 
 const Comments = () => {
   const { getItem, setItem } = useLocalStorage("myData");
   const [currentUser, setCurrentUser] = useState(null);
   const [comments, setComments] = useState([]);
-  const [replyingTo, setReplyingTo] = useState(null);
 
   useEffect(() => {
     const data = getItem();
@@ -16,6 +16,17 @@ const Comments = () => {
       setComments(data.comments);
     }
   }, []);
+
+  const handleAddComment = (newCommentPost) => {
+    // Copiar el array de comentarios actual para evitar mutar el estado directamente
+    const updatedComments = [...comments, newCommentPost];
+
+    // Actualizar el estado de los comentarios
+    setComments(updatedComments);
+
+    // Guardar los cambios en el localStorage
+    setItem({ ...getItem(), comments: updatedComments });
+  };
 
   const handleVoteComment = (commentId, voteType) => {
     // Verificar si el usuario actual ha votado por el comentario principal
@@ -174,11 +185,6 @@ const Comments = () => {
     setItem({ currentUser, comments: updatedComments });
   };
 
-  const handleReply = (username) => {
-    setReplyingTo(username);
-    console.log("respuesta a " + username);
-  };
-
   const handleSendReply = (parentCommentId, newReply) => {
     // Find the parent comment
     console.log("Handle Send Reply to:" + parentCommentId);
@@ -210,7 +216,6 @@ const Comments = () => {
             comment={comment}
             currentUser={currentUser}
             parentCommentId={comment.id}
-            onReply={handleReply}
             onSendReply={handleSendReply}
             onEditComment={handleEditComment}
             onDeleteComment={handleDeleteComment}
@@ -228,7 +233,6 @@ const Comments = () => {
                       comment={reply}
                       currentUser={currentUser}
                       parentCommentId={comment.id}
-                      onReply={handleReply}
                       onSendReply={handleSendReply}
                       onEditComment={handleEditComment}
                       onDeleteComment={handleDeleteComment}
@@ -243,6 +247,7 @@ const Comments = () => {
           )}
         </div>
       ))}
+      <NewComment currentUser={currentUser} onAddComment={handleAddComment} />
     </div>
   );
 };
