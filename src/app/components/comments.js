@@ -13,7 +13,8 @@ const Comments = () => {
     const data = getItem();
     if (data) {
       setCurrentUser(data.currentUser);
-      setComments(data.comments);
+      const sortedComments = data.comments.sort((a, b) => b.score - a.score);
+      setComments(sortedComments);
     }
   }, []);
 

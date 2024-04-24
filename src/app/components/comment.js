@@ -12,7 +12,6 @@ import deleteIco from "../../../images/icon-delete.svg";
 const Comment = ({
   comment,
   currentUser,
-  onReply,
   onSendReply,
   parentCommentId,
   onEditComment,
@@ -105,12 +104,13 @@ const Comment = ({
 
   const handleSendReply = () => {
     // Crear la nueva respuesta
-    const now = new Date().toLocaleDateString("en-us", {
+    const now = Date.now();
+    /*new Date().toLocaleDateString("en-us", {
       weekday: "long",
       year: "numeric",
       month: "short",
       day: "numeric",
-    });
+    }); para publicar fecha de creacion sin timestamp*/
     const newReply = {
       id: Date.now(),
       content: replyText,
@@ -128,6 +128,41 @@ const Comment = ({
     // Cerrar el cuadro de respuesta
     setIsReplying(false);
   };
+
+  const calculateTimeSincePost = (timestamp) => {
+    const now = new Date();
+    const postTime = new Date(timestamp);
+    const timeDifference = now.getTime() - postTime.getTime();
+
+    const seconds = Math.floor(timeDifference / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+
+    if (days > 0) {
+      return `${days} day${days !== 1 ? "s" : ""} ago`;
+    } else if (hours > 0) {
+      return `${hours} hour${hours !== 1 ? "s" : ""} ago`;
+    } else if (minutes > 0) {
+      return `${minutes} minute${minutes !== 1 ? "s" : ""} ago`;
+    } else {
+      return `${seconds} second${seconds !== 1 ? "s" : ""} ago`;
+    }
+  };
+
+  const timestamp = comment.createdAt; // Marca de tiempo del comentario o respuesta
+  const timeSincePost = calculateTimeSincePost(timestamp);
+
+  /*
+  Blue tag in future replies, but not in the already replied comments 
+
+  const [replyText, setReplyText] = useState(`@${comment.user.username ? comment.user.username : ""} `);
+  
+  const formattedContent = comment.content.replace(
+    /^(@\w+)/,
+    '<span class="text-blue-500 font-semibold ">$1</span>'
+  );
+  <p dangerouslySetInnerHTML={{ __html: formattedContent }}></p>; */
 
   return (
     <div className="  text-slate-500  my-2">
@@ -180,7 +215,7 @@ const Comment = ({
             ) : (
               <></>
             )}
-            <span className="ml-5">{comment.createdAt}</span>
+            <span className="ml-5">{timeSincePost}</span>
             {currentUser.username !== comment.user.username ? (
               <div className="  flex flex-row items-center place-self-end  h-7">
                 <Image
@@ -258,9 +293,16 @@ const Comment = ({
           ) : (
             <div>
               <p>
-                {comment.replyingTo
-                  ? `@${comment.replyingTo} ` + comment.content
-                  : comment.content}
+                {comment.replyingTo ? (
+                  <>
+                    <span className="text-blue-500 font-semibold">
+                      @{comment.replyingTo}
+                    </span>{" "}
+                    {comment.content}
+                  </>
+                ) : (
+                  comment.content
+                )}
               </p>
             </div>
           )}

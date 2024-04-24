@@ -8,12 +8,13 @@ const NewComment = ({ onAddComment, currentUser }) => {
   const [newComment, setNewComment] = useState("");
 
   const handleNewComment = () => {
-    const now = new Date().toLocaleDateString("en-us", {
+    const now = Date.now();
+    /*new Date().toLocaleDateString("en-us", {
       weekday: "long",
       year: "numeric",
       month: "short",
       day: "numeric",
-    });
+    }); para publicar fecha de creacion sin timestamp */
     const newCommentPost = {
       id: Date.now(),
       content: newComment,

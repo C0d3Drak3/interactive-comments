@@ -7,6 +7,43 @@ export default function Home() {
   const { getItem, setItem } = useLocalStorage("myData");
   const [commentsLoaded, setCommentsLoaded] = useState(false);
 
+  interface Image {
+    png: string;
+    webp: string;
+  }
+
+  interface User {
+    image: Image;
+    username: string;
+  }
+
+  interface Comment {
+    id: number;
+    content: string;
+    createdAt: string | number;
+    score: number;
+    user: User;
+    replies: Comment[];
+  }
+
+  interface Data {
+    currentUser: User;
+    comments: Comment[];
+  }
+
+  const updateTimestamps = (data: Data): void => {
+    // Iterar sobre los comentarios
+    data.comments.forEach((comment) => {
+      // Actualizar el valor de createdAt
+      comment.createdAt = 1713798367793;
+      // Iterar sobre las respuestas
+      comment.replies.forEach((reply) => {
+        // Actualizar el valor de createdAt en las respuestas
+        reply.createdAt = 1713975567793;
+      });
+    });
+  };
+
   useEffect(() => {
     // Verificar si los datos ya existen en el localStorage
     const existingData = getItem();
@@ -18,6 +55,8 @@ export default function Home() {
         .then((data) => {
           // Agregar la propiedad "votes" al currentUser con valor inicial de un objeto vacío
           data.currentUser.votes = [];
+          // Cambiar la propiedad createdAt
+          updateTimestamps(data);
           // Almacenar los datos en el localStorage
           setItem(data);
           console.log("Data loaded correctly");
