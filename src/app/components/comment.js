@@ -33,7 +33,7 @@ const Comment = ({
 
   useEffect(() => {
     // Verificar si el usuario actual ya votó por este comentario
-    const userVote = currentUser.votes.find(
+    const userVote = currentUser.votes?.find(
       (vote) => vote.commentId === comment.id
     );
 
@@ -48,6 +48,7 @@ const Comment = ({
     }
   }, [comment.id, currentUser.votes]);
 
+  //VOTES
   const handleUpvote = () => {
     if (!upvoted) {
       onVoteComment(comment.id, "up");
@@ -64,6 +65,7 @@ const Comment = ({
     }
   };
 
+  //EDIT
   const handleEdit = () => {
     setEditing(true);
   };
@@ -77,6 +79,7 @@ const Comment = ({
     setEditing(false);
   };
 
+  //DELETE
   const handleDelete = () => {
     // Lógica para eliminar el comentario
     setShowModal(true);
@@ -94,6 +97,7 @@ const Comment = ({
     setShowModal(false);
   };
 
+  //REPLY
   const handleReply = () => {
     if (isReplying) {
       setIsReplying(false);
@@ -129,6 +133,7 @@ const Comment = ({
     setIsReplying(false);
   };
 
+  //TIME
   const calculateTimeSincePost = (timestamp) => {
     const now = new Date();
     const postTime = new Date(timestamp);
@@ -153,6 +158,8 @@ const Comment = ({
   const timestamp = comment.createdAt; // Marca de tiempo del comentario o respuesta
   const timeSincePost = calculateTimeSincePost(timestamp);
 
+  const width = comment.replyingTo ? "w-[700px]" : "w-[750px]";
+
   /*
   Blue tag in future replies, but not in the already replied comments 
 
@@ -165,8 +172,8 @@ const Comment = ({
   <p dangerouslySetInnerHTML={{ __html: formattedContent }}></p>; */
 
   return (
-    <div className="  text-slate-500  my-2">
-      <div className="bg-white rounded-lg grid grid-flow-col max-w-[750px]">
+    <div className={` flex flex-col ${width} text-slate-500  my-2`}>
+      <div className={`bg-white rounded-lg grid grid-flow-col ${width}`}>
         <div className="grid grid-col bg-slate-100 w-9 h-[70px] content-center place-items-center justify-items-center rounded-lg mx-2 my-8 text-blue-600 font-bold">
           <button
             className=" w-5 h-5"
@@ -310,7 +317,11 @@ const Comment = ({
       </div>
       {/*REPLY */}
       {isReplying && (
-        <div className="bg-white rounded-lg grid grid-flow-col w-[750px] my-2 p-5">
+        <div
+          className={`bg-white rounded-lg grid grid-flow-col my-2 p-5w-${
+            comment.replyingTo ? "[650px]" : "[750px]"
+          }`}
+        >
           <div className="">
             <Image
               src={testImg}

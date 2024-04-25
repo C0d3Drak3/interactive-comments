@@ -31,6 +31,7 @@ export default function Home() {
     comments: Comment[];
   }
 
+  //Función para cambiar las fechas del data.json a un formato legible por la función en comments
   const updateTimestamps = (data: Data): void => {
     // Iterar sobre los comentarios
     data.comments.forEach((comment) => {
@@ -73,7 +74,7 @@ export default function Home() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-between p-24 bg-slate-100">
       {commentsLoaded ? (
-        <div className="w-full items-center justify-center place-items-center">
+        <div className="flex w-full items-center justify-center place-items-center">
           <Comments />
         </div>
       ) : (
