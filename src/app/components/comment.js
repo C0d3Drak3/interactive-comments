@@ -159,6 +159,8 @@ const Comment = ({
   const timeSincePost = calculateTimeSincePost(timestamp);
 
   const width = comment.replyingTo ? "w-[700px]" : "w-[750px]";
+  const width2 = comment.replyingTo ? "w-[650px]" : "w-[700px]";
+  const width3 = comment.replyingTo ? "w-[626px]" : "w-[676px]";
 
   /*
   Blue tag in future replies, but not in the already replied comments 
@@ -203,26 +205,28 @@ const Comment = ({
             />
           </button>
         </div>
-        <div className="p-3 max-w-[650px]">
-          <div className="flex flex-row h-7">
-            <Image
-              src={testImg}
-              alt="img not found"
-              width={30}
-              height={30}
-              className="flex w-6 h-6 "
-            />
-            <span className=" text-black font-semibold ml-5">
-              {comment.user.username}
-            </span>
-            {currentUser.username === comment.user.username ? (
-              <div className=" bg-blue-600 text-white font-semibold rounded-md w-12 mx-3 text-center">
-                you
-              </div>
-            ) : (
-              <></>
-            )}
-            <span className="ml-5">{timeSincePost}</span>
+        <div className={`p-3 ${width2}`}>
+          <div className={`flex flex-row h-7 justify-between ${width3}`}>
+            <div className="grid grid-flow-col h-7 justify-start ">
+              <Image
+                src={testImg}
+                alt="img not found"
+                width={30}
+                height={30}
+                className="flex w-6 h-6 "
+              />
+              <span className=" text-black font-semibold ml-5">
+                {comment.user.username}
+              </span>
+              {currentUser.username === comment.user.username ? (
+                <div className=" bg-blue-600 text-white font-semibold rounded-md w-12 mx-3 text-center">
+                  you
+                </div>
+              ) : (
+                <></>
+              )}
+              <span className="ml-5">{timeSincePost}</span>
+            </div>
             {currentUser.username !== comment.user.username ? (
               <div className="  flex flex-row items-center place-self-end  h-7">
                 <Image
@@ -241,43 +245,45 @@ const Comment = ({
               </div>
             ) : (
               <>
-                <div className="  flex flex-row items-center place-self-end  h-7 mx-2">
-                  <Image
-                    src={deleteIco}
-                    alt="img not found"
-                    width={30}
-                    height={30}
-                    className="flex w-4 h-4 "
-                  />
-                  <button
-                    className=" font-bold text-red-600 h-7 "
-                    onClick={handleDelete}
-                  >
-                    Delete
-                  </button>
-                  {/* Renderizar el modal de confirmación */}
-                  {showModal && (
-                    <div className="absolute z-10 border-2 border-black w-96 h-40">
-                      <p>Are you sure you want to delete this comment?</p>
-                      <button onClick={handleConfirmDelete}>Yes</button>
-                      <button onClick={handleCancelDelete}>Cancel</button>
-                    </div>
-                  )}
-                </div>
-                <div className="  flex flex-row items-center place-self-end  h-7 mx-2">
-                  <Image
-                    src={editIco}
-                    alt="img not found"
-                    width={30}
-                    height={30}
-                    className="flex w-4 h-4 "
-                  />
-                  <button
-                    className=" font-bold text-blue-600 h-7 "
-                    onClick={handleEdit}
-                  >
-                    Edit
-                  </button>
+                <div className="grid grid-flow-col h-7 justify-end ">
+                  <div className="  flex flex-row items-center place-self-end  h-7 mx-2">
+                    <Image
+                      src={deleteIco}
+                      alt="img not found"
+                      width={30}
+                      height={30}
+                      className="flex w-4 h-4 "
+                    />
+                    <button
+                      className=" font-bold text-red-600 h-7 "
+                      onClick={handleDelete}
+                    >
+                      Delete
+                    </button>
+                    {/* Renderizar el modal de confirmación */}
+                    {showModal && (
+                      <div className="absolute z-10 border-2 border-black w-96 h-40">
+                        <p>Are you sure you want to delete this comment?</p>
+                        <button onClick={handleConfirmDelete}>Yes</button>
+                        <button onClick={handleCancelDelete}>Cancel</button>
+                      </div>
+                    )}
+                  </div>
+                  <div className="  flex flex-row items-center place-self-end  h-7 mx-2">
+                    <Image
+                      src={editIco}
+                      alt="img not found"
+                      width={30}
+                      height={30}
+                      className="flex w-4 h-4 "
+                    />
+                    <button
+                      className=" font-bold text-blue-600 h-7 "
+                      onClick={handleEdit}
+                    >
+                      Edit
+                    </button>
+                  </div>
                 </div>
               </>
             )}
@@ -318,9 +324,7 @@ const Comment = ({
       {/*REPLY */}
       {isReplying && (
         <div
-          className={`bg-white rounded-lg grid grid-flow-col my-2 p-5w-${
-            comment.replyingTo ? "[650px]" : "[750px]"
-          }`}
+          className={`bg-white rounded-lg grid grid-flow-col my-2 p-5 ${width}`}
         >
           <div className="">
             <Image
