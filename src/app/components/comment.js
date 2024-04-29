@@ -206,20 +206,20 @@ const Comment = ({
           </button>
         </div>
         <div className={`p-3 ${width2}`}>
-          <div className={`flex flex-row h-7 justify-between ${width3}`}>
-            <div className="grid grid-flow-col h-7 justify-start ">
+          <div className={`flex flex-row h-7 justify-between my-2 ${width3}`}>
+            <div className="grid grid-flow-col h-7 justify-start items-center">
               <Image
                 src={testImg}
                 alt="img not found"
                 width={30}
                 height={30}
-                className="flex w-6 h-6 "
+                className="flex w-7 h-7 "
               />
               <span className=" text-black font-semibold ml-5">
                 {comment.user.username}
               </span>
               {currentUser.username === comment.user.username ? (
-                <div className=" bg-blue-600 text-white font-semibold rounded-md w-12 mx-3 text-center">
+                <div className=" bg-blue-600 text-white font-semibold rounded w-12 mx-2 my-1 text-center">
                   you
                 </div>
               ) : (
@@ -237,7 +237,7 @@ const Comment = ({
                   className="flex w-4 h-4 "
                 />
                 <button
-                  className=" font-bold text-blue-600 h-7 "
+                  className=" font-bold text-blue-600 h-7 mx-2"
                   onClick={handleReply}
                 >
                   Reply
@@ -255,21 +255,41 @@ const Comment = ({
                       className="flex w-4 h-4 "
                     />
                     <button
-                      className=" font-bold text-red-600 h-7 "
+                      className=" font-bold text-red-600 h-7 ml-2"
                       onClick={handleDelete}
                     >
                       Delete
                     </button>
                     {/* Renderizar el modal de confirmación */}
                     {showModal && (
-                      <div className="absolute z-10 border-2 border-black w-96 h-40">
-                        <p>Are you sure you want to delete this comment?</p>
-                        <button onClick={handleConfirmDelete}>Yes</button>
-                        <button onClick={handleCancelDelete}>Cancel</button>
+                      <div className="fixed inset-0 flex items-center justify-center z-10 bg-black/50">
+                        <div className=" bg-white rounded-lg  w-[400px] h-[270px] p-9">
+                          <h1 className=" font-bold text-2xl text-gray-700">
+                            Delete comment
+                          </h1>
+                          <p className=" my-6">
+                            Are you sure you want to delete this comment? This
+                            will remove this comment and can't be undone
+                          </p>
+                          <div className="flex flex-row justify-between">
+                            <button
+                              className=" bg-slate-400 rounded-lg w-[150px] h-[50px] text-white font-semibold transition-colors duration-300 filter  hover:bg-slate-600 "
+                              onClick={handleCancelDelete}
+                            >
+                              NO, CANCEL
+                            </button>
+                            <button
+                              className=" bg-red-400 rounded-lg w-[150px] h-[50px] text-white font-semibold transition-colors duration-300 filter  hover:bg-red-600"
+                              onClick={handleConfirmDelete}
+                            >
+                              YES, DELETE
+                            </button>
+                          </div>
+                        </div>
                       </div>
                     )}
                   </div>
-                  <div className="  flex flex-row items-center place-self-end  h-7 mx-2">
+                  <div className="  flex flex-row items-center place-self-end  h-7 ml-4 mr-2">
                     <Image
                       src={editIco}
                       alt="img not found"
@@ -278,7 +298,7 @@ const Comment = ({
                       className="flex w-4 h-4 "
                     />
                     <button
-                      className=" font-bold text-blue-600 h-7 "
+                      className=" font-bold text-blue-600 h-7 ml-2 "
                       onClick={handleEdit}
                     >
                       Edit
