@@ -33,7 +33,7 @@ const NewComment = ({ onAddComment, currentUser }) => {
   };
 
   return (
-    <div className="bg-white rounded-lg grid grid-flow-col w-[750px] my-2 p-5 text-slate-500 ">
+    <div className="bg-white rounded-lg grid grid-flow-col justify-between w-[750px] my-2 p-5 text-slate-500 ">
       <div className="">
         {/* Asegúrate de tener la ruta correcta a tu imagen y que testImg esté definido */}
         <Image
@@ -45,15 +45,17 @@ const NewComment = ({ onAddComment, currentUser }) => {
         />
       </div>
 
-      <input
+      <textarea
         type="text"
         value={newComment}
         onChange={(e) => setNewComment(e.target.value)}
         placeholder={`New post here`}
-        className="min-h-[100px] w-[550px] border-2 border-purple-800 rounded-lg"
+        maxLength={300}
+        className="min-h-[100px] w-[550px] border-2 border-blue-600 rounded-lg p-1 "
+        style={{ resize: "none" }}
       />
       <button
-        className="bg-blue-600 rounded-lg w-[90px] h-[40px] text-white"
+        className="bg-blue-600 rounded-lg w-[90px] h-[40px] text-white transition-colors duration-300 filter  hover:bg-blue-300 "
         onClick={handleNewComment}
       >
         SEND

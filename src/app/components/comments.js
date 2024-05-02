@@ -225,10 +225,12 @@ const Comments = () => {
           {comment.replies.length > 0 ? (
             <div className="flex  flex-col ">
               {comment.replies.map((reply) => (
-                <div className="flex flex-row justify-evenly">
-                  <div className=" bg-slate-300 w-1 mx-[22px]"></div>
+                <div className="flex flex-row justify-between">
+                  <div className="flex w-[90px] justify-center">
+                    <div className=" bg-slate-300 w-1 "></div>
+                  </div>
 
-                  <div className="w-[700px]">
+                  <div className="w-[650px]">
                     <Comment
                       key={reply.id}
                       comment={reply}
