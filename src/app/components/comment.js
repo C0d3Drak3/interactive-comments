@@ -2,10 +2,6 @@
 
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
-import testImg from "../../../images/avatars/image-amyrobson.png";
-import replyArrow from "../../../images/icon-reply.svg";
-import editIco from "../../../images/icon-edit.svg";
-import deleteIco from "../../../images/icon-delete.svg";
 
 const Comment = ({
   comment,
@@ -17,17 +13,15 @@ const Comment = ({
   onVoteComment,
 }) => {
   const [replyText, setReplyText] = useState("");
-  const userImg = "." + comment.user.image.png;
-  const currentUserImg = currentUser.image.png;
-  const currentUserImg2 = currentUserImg.substring(1);
-  //arreglar para poder mostrar avatares correctamente
-
   const [isReplying, setIsReplying] = useState(false); //Reply, estado para manejar el cuadro de respuesta
   const [editing, setEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(comment.content);
   const [showModal, setShowModal] = useState(false);
   const [upvoted, setUpvoted] = useState(false);
   const [downvoted, setDownvoted] = useState(false);
+
+  const userImg = comment.user?.image.png.substring(1);
+  const currentUserImg = currentUser?.image.png.substring(1);
 
   useEffect(() => {
     // Verificar si el usuario actual ya votó por este comentario
@@ -156,10 +150,11 @@ const Comment = ({
   const timestamp = comment.createdAt; // Marca de tiempo del comentario o respuesta
   const timeSincePost = calculateTimeSincePost(timestamp);
 
-  const width = comment.replyingTo ? "w-[650px]" : "w-[750px]";
-  const width2 = comment.replyingTo ? "w-[550px]" : "w-[650px]";
-  const width3 = comment.replyingTo ? "w-[550px]" : "w-[650px]";
-  const textWidth = comment.replyingTo ? "w-[450px]" : "w-[500px]";
+  const width = comment.replyingTo
+    ? "w-[320px] md:w-[650px]"
+    : "w-[350px] md:w-[750px]";
+  const width2 = comment.replyingTo ? "md:w-[550px]" : "md:w-[650px]";
+  const textWidth = comment.replyingTo ? "md:w-[450px]" : "md:w-[500px]";
 
   /*
   Blue tag in future replies, but not in the already replied comments 
@@ -178,7 +173,7 @@ const Comment = ({
         className={`bg-white rounded-lg grid grid-flow-col justify-between p-5 ${width}`}
       >
         {/* VOTES*/}
-        <div className="flex flex-col bg-slate-100 w-[32px] h-[90px] justify-items-center rounded-lg mx-2 mt-2 text-blue-600 font-bold">
+        <div className="hidden md:flex flex-col bg-slate-100 w-[32px] h-[90px] justify-items-center rounded-lg mx-2 mt-2 text-blue-600 font-bold">
           <button
             className=" w-5 h-5 mx-[11px] my-2"
             onClick={handleUpvote}
@@ -220,29 +215,34 @@ const Comment = ({
         <div className={` ${width2}`}>
           <div className={`flex flex-row h-7 justify-between my-2 ${width2}`}>
             <div className="grid grid-flow-col h-7 justify-start items-center">
-              <Image
-                src={testImg}
-                alt="img not found"
-                width={30}
-                height={30}
-                className="flex w-7 h-7 "
-              />
-              <span className=" text-black font-semibold ml-5">
+              <div className="">
+                <Image
+                  src={userImg}
+                  alt="img not found"
+                  width={50}
+                  height={50}
+                  className="w-7 h-auto"
+                />
+              </div>
+              <span className=" text-black font-semibold ml-3">
                 {comment.user.username}
               </span>
               {currentUser.username === comment.user.username ? (
-                <div className=" bg-blue-600 text-white font-semibold rounded w-12 mx-2 my-1 text-center">
+                <div className=" bg-blue-600 text-white font-semibold rounded w-12 mx-1 md:mx-2 my-1 text-center">
                   you
                 </div>
               ) : (
                 <></>
               )}
-              <span className="ml-5">{timeSincePost}</span>
+              <span className="ml-2 text-sm md:text-base md:ml-4">
+                {timeSincePost}
+              </span>
             </div>
+            {/* CONDITIONAL REPLY-EDIT-DELETE */}
             {currentUser.username !== comment.user.username ? (
-              <div className="  flex flex-row items-center place-self-end  h-7">
+              <div className=" hidden md:flex flex-row items-center place-self-end  h-7">
                 <Image
-                  src={replyArrow}
+                  src="/images/icon-reply.svg"
                   alt="img not found"
                   width={30}
                   height={30}
@@ -257,10 +257,10 @@ const Comment = ({
               </div>
             ) : (
               <>
-                <div className="grid grid-flow-col h-7 justify-end ">
+                <div className="hidden md:grid grid-flow-col h-7 justify-end ">
                   <div className="  flex flex-row items-center place-self-end  h-7 mx-2">
                     <Image
-                      src={deleteIco}
+                      src="/images/icon-delete.svg"
                       alt="img not found"
                       width={30}
                       height={30}
@@ -303,7 +303,7 @@ const Comment = ({
                   </div>
                   <div className="  flex flex-row items-center place-self-end  h-7 ml-4 ">
                     <Image
-                      src={editIco}
+                      src="/images/icon-edit.svg"
                       alt="img not found"
                       width={30}
                       height={30}
@@ -327,7 +327,7 @@ const Comment = ({
                 value={editedContent}
                 onChange={(e) => setEditedContent(e.target.value)}
                 maxLength={300}
-                className={`min-h-[100px]  border-2 border-blue-600 rounded-lg ${width2}`}
+                className={`min-h-[100px]  border-2 border-blue-600 rounded-lg p-2 ${width2}`}
                 style={{ resize: "none" }}
               />
               <button
@@ -340,7 +340,7 @@ const Comment = ({
           ) : (
             <div>
               {/*SHOW COMMENT*/}
-              <p className={` break-words  ${width3}`}>
+              <p className={` break-words  ${width2}`}>
                 {comment.replyingTo ? (
                   <>
                     <span className="text-blue-500 font-semibold">
@@ -354,6 +354,47 @@ const Comment = ({
               </p>
             </div>
           )}
+          <div className="flex flex-row md:hidden mt-5">
+            {/*MOBILE VOTES*/}
+            <div className="flex flex-row bg-slate-100 w-[90px] h-[32px] align-middle justify-between rounded-lg mt-2 text-blue-600 font-bold">
+              <button
+                className=" w-[30px] h-5  p-[10px]"
+                onClick={handleUpvote}
+                disabled={upvoted}
+              >
+                <svg
+                  width="15"
+                  height="15"
+                  xmlns="http://www.w3.org/2000/svg"
+                  className={`w-auto h-auto transition-colors duration-200 fill-current text-gray-400 ${
+                    upvoted ? `` : `hover:text-blue-600`
+                  }`}
+                >
+                  <path d="M6.33 10.896c.137 0 .255-.05.354-.149.1-.1.149-.217.149-.354V7.004h3.315c.136 0 .254-.05.354-.149.099-.1.148-.217.148-.354V5.272a.483.483 0 0 0-.148-.354.483.483 0 0 0-.354-.149H6.833V1.4a.483.483 0 0 0-.149-.354.483.483 0 0 0-.354-.149H4.915a.483.483 0 0 0-.354.149c-.1.1-.149.217-.149.354v3.37H1.08a.483.483 0 0 0-.354.15c-.1.099-.149.217-.149.353v1.23c0 .136.05.254.149.353.1.1.217.149.354.149h3.333v3.39c0 .136.05.254.15.353.098.1.216.149.353.149H6.33Z" />
+                </svg>
+              </button>
+
+              <div className=" w-[30px]  flex justify-center p-1">
+                <span> {comment.score}</span>
+              </div>
+              <button
+                className=" w-[30px] h-5 p-[14px]"
+                onClick={handleDownvote}
+                disabled={downvoted}
+              >
+                <svg
+                  width="15"
+                  height="5"
+                  xmlns="http://www.w3.org/2000/svg"
+                  className={`w-auto h-auto transition-colors duration-200 fill-current text-gray-400 ${
+                    downvoted ? `` : `hover:text-blue-600`
+                  }`}
+                >
+                  <path d="M9.256 2.66c.204 0 .38-.056.53-.167.148-.11.222-.243.222-.396V.722c0-.152-.074-.284-.223-.395a.859.859 0 0 0-.53-.167H.76a.859.859 0 0 0-.53.167C.083.437.009.57.009.722v1.375c0 .153.074.285.223.396a.859.859 0 0 0 .53.167h8.495Z" />
+                </svg>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
       {/*REPLY */}
@@ -363,7 +404,7 @@ const Comment = ({
         >
           <div className="">
             <Image
-              src={testImg}
+              src={currentUserImg}
               alt="img not found"
               width={50}
               height={50}
@@ -377,7 +418,7 @@ const Comment = ({
             onChange={(e) => setReplyText(e.target.value)}
             placeholder={`Replying to ${comment.user.username}`}
             maxLength={300}
-            className={`min-h-[100px] border-2 border-blue-600 rounded-lg p-1 ${textWidth}`}
+            className={`min-h-[100px] border-2 border-blue-600 rounded-lg p-2 ${textWidth}`}
             style={{ resize: "none" }}
           />
           <button

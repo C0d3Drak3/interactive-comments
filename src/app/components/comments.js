@@ -209,7 +209,7 @@ const Comments = () => {
   };
 
   return (
-    <div className="flex flex-col w-[750px] place-items-center">
+    <div className="flex flex-col w-[350px] md:w-[750px] place-items-center">
       {comments.map((comment) => (
         <div className="">
           <Comment
@@ -226,11 +226,11 @@ const Comments = () => {
             <div className="flex  flex-col ">
               {comment.replies.map((reply) => (
                 <div className="flex flex-row justify-between">
-                  <div className="flex w-[90px] justify-center">
+                  <div className="flex w-[30px] md:w-[90px] justify-start md:justify-center">
                     <div className=" bg-slate-300 w-1 "></div>
                   </div>
 
-                  <div className="w-[650px]">
+                  <div className="w-[320px] md:w-[650px]">
                     <Comment
                       key={reply.id}
                       comment={reply}
