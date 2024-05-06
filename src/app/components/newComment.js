@@ -24,11 +24,9 @@ const NewComment = ({ onAddComment, currentUser }) => {
       user: currentUser,
       replies: [],
     };
-    // Verificar si el comentario no está vacío antes de agregarlo
+    // Verifica si el comentario no está vacío antes de agregarlo
     if (newComment.trim() !== "") {
-      // Llamar a la función onAddComment y pasarle el nuevo comentario
       onAddComment(newCommentPost);
-      // Limpiar el estado después de agregar el comentario
       setNewComment("");
     }
   };

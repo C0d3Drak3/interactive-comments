@@ -14,9 +14,9 @@ const Comment = ({
 }) => {
   const [replyText, setReplyText] = useState("");
   const [isReplying, setIsReplying] = useState(false); //Reply, estado para manejar el cuadro de respuesta
-  const [editing, setEditing] = useState(false);
+  const [editing, setEditing] = useState(false); //Edit, estado que activa la edicion
   const [editedContent, setEditedContent] = useState(comment.content);
-  const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowModal] = useState(false); // Estado para mostrar el modal
   const [upvoted, setUpvoted] = useState(false);
   const [downvoted, setDownvoted] = useState(false);
 
@@ -24,7 +24,7 @@ const Comment = ({
   const currentUserImg = currentUser?.image.png.substring(1);
 
   useEffect(() => {
-    // Verificar si el usuario actual ya votó por este comentario
+    // Verifica si el usuario actual ya votó por este comentario
     const userVote = currentUser.votes?.find(
       (vote) => vote.commentId === comment.id
     );
@@ -153,8 +153,12 @@ const Comment = ({
   const width = comment.replyingTo
     ? "w-[320px] md:w-[650px]"
     : "w-[350px] md:w-[750px]";
-  const width2 = comment.replyingTo ? "md:w-[550px]" : "md:w-[650px]";
-  const textWidth = comment.replyingTo ? "md:w-[450px]" : "md:w-[500px]";
+  const width2 = comment.replyingTo
+    ? "w-[280px] md:w-[550px]"
+    : "w-[310px] md:w-[650px]";
+  const textWidth = comment.replyingTo
+    ? " w-[280px] md:w-[450px]"
+    : "w-[310px] md:w-[500px]";
 
   /*
   Blue tag in future replies, but not in the already replied comments 
@@ -224,11 +228,11 @@ const Comment = ({
                   className="w-7 h-auto"
                 />
               </div>
-              <span className=" text-black font-semibold ml-3">
+              <span className=" text-black font-semibold ml-3 text-sm md:text-base">
                 {comment.user.username}
               </span>
               {currentUser.username === comment.user.username ? (
-                <div className=" bg-blue-600 text-white font-semibold rounded w-12 mx-1 md:mx-2 my-1 text-center">
+                <div className=" bg-blue-600 text-white font-semibold rounded w-10 md:w-12 mx-1 md:mx-2 my-1 text-center text-sm md:text-base">
                   you
                 </div>
               ) : (
@@ -241,35 +245,35 @@ const Comment = ({
             {/* CONDITIONAL REPLY-EDIT-DELETE */}
             {currentUser.username !== comment.user.username ? (
               <div className=" hidden md:flex flex-row items-center place-self-end  h-7">
-                <Image
-                  src="/images/icon-reply.svg"
-                  alt="img not found"
-                  width={30}
-                  height={30}
-                  className="flex w-4 h-4 "
-                />
                 <button
-                  className=" font-bold text-blue-600 h-7 ml-2"
+                  className="flex flex-row items-center font-bold text-blue-600 h-7 ml-2 transition-all duration-300 filter  hover:brightness-150"
                   onClick={handleReply}
                 >
+                  <Image
+                    src="/images/icon-reply.svg"
+                    alt="img not found"
+                    width={30}
+                    height={30}
+                    className="flex w-4 h-4 mx-1 "
+                  />
                   Reply
                 </button>
               </div>
             ) : (
               <>
                 <div className="hidden md:grid grid-flow-col h-7 justify-end ">
-                  <div className="  flex flex-row items-center place-self-end  h-7 mx-2">
-                    <Image
-                      src="/images/icon-delete.svg"
-                      alt="img not found"
-                      width={30}
-                      height={30}
-                      className="flex w-4 h-4 "
-                    />
+                  <div className="">
                     <button
-                      className=" font-bold text-red-600 h-7 ml-2"
+                      className=" flex flex-row items-center font-bold text-red-600 h-7 ml-2  transition-all duration-300 filter  hover:text-red-400 hover:brightness-150"
                       onClick={handleDelete}
                     >
+                      <Image
+                        src="/images/icon-delete.svg"
+                        alt="img not found"
+                        width={30}
+                        height={30}
+                        className="flex w-4 h-4 mx-1"
+                      />
                       Delete
                     </button>
                     {/* Renderizar el modal de confirmación */}
@@ -301,18 +305,18 @@ const Comment = ({
                       </div>
                     )}
                   </div>
-                  <div className="  flex flex-row items-center place-self-end  h-7 ml-4 ">
-                    <Image
-                      src="/images/icon-edit.svg"
-                      alt="img not found"
-                      width={30}
-                      height={30}
-                      className="flex w-4 h-4 "
-                    />
+                  <div className=" ml-4 ">
                     <button
-                      className=" font-bold text-blue-600 h-7 ml-2 "
+                      className=" flex flex-row items-center  font-bold text-blue-600 h-7 ml-2 transition-all duration-300 filter  hover:brightness-150 "
                       onClick={handleEdit}
                     >
+                      <Image
+                        src="/images/icon-edit.svg"
+                        alt="img not found"
+                        width={30}
+                        height={30}
+                        className="flex w-4 h-4 mx-1"
+                      />
                       Edit
                     </button>
                   </div>
@@ -331,7 +335,7 @@ const Comment = ({
                 style={{ resize: "none" }}
               />
               <button
-                className=" bg-blue-600 rounded-lg w-[90px] h-[40px] text-white my-2 transition-colors duration-300 filter  hover:bg-blue-300 "
+                className=" bg-blue-600 rounded-lg w-[90px] h-[40px] text-white mt-2 transition-colors duration-300 filter  hover:bg-blue-300 "
                 onClick={handleSaveEdit}
               >
                 UPDATE
@@ -354,7 +358,10 @@ const Comment = ({
               </p>
             </div>
           )}
-          <div className="flex flex-row md:hidden mt-5">
+          {/*MOBILE BOTTOM BUTTONS*/}
+          <div
+            className={`flex flex-row md:hidden mt-5 justify-between items-center ${width2}`}
+          >
             {/*MOBILE VOTES*/}
             <div className="flex flex-row bg-slate-100 w-[90px] h-[32px] align-middle justify-between rounded-lg mt-2 text-blue-600 font-bold">
               <button
@@ -394,15 +401,93 @@ const Comment = ({
                 </svg>
               </button>
             </div>
+            {currentUser.username !== comment.user.username ? (
+              <div className="flex flex-row items-center place-self-end  h-7">
+                <button
+                  className="flex flex-row items-center font-bold text-blue-600 h-7 ml-2 transition-all duration-300 filter  hover:brightness-150"
+                  onClick={handleReply}
+                >
+                  <Image
+                    src="/images/icon-reply.svg"
+                    alt="img not found"
+                    width={30}
+                    height={30}
+                    className="flex w-4 h-4 mx-1 "
+                  />
+                  Reply
+                </button>
+              </div>
+            ) : (
+              <div className="flex flex-row items-center place-self-end  h-7 ">
+                <div className="">
+                  <button
+                    className=" flex flex-row items-center font-bold text-red-600 h-7 ml-2  transition-all duration-300 filter  hover:text-red-400 hover:brightness-150"
+                    onClick={handleDelete}
+                  >
+                    <Image
+                      src="/images/icon-delete.svg"
+                      alt="img not found"
+                      width={30}
+                      height={30}
+                      className="flex w-4 h-4 mx-1"
+                    />
+                    Delete
+                  </button>
+                  {/* Renderizar el modal de confirmación */}
+                  {showModal && (
+                    <div className="fixed inset-0 flex items-center justify-center z-10 bg-black/50">
+                      <div className=" bg-white rounded-lg  w-[400px] h-[270px] p-9">
+                        <h1 className=" font-bold text-2xl text-gray-700">
+                          Delete comment
+                        </h1>
+                        <p className=" my-6">
+                          Are you sure you want to delete this comment? This
+                          will remove this comment and can't be undone
+                        </p>
+                        <div className="flex flex-row justify-between">
+                          <button
+                            className=" bg-slate-400 rounded-lg w-[150px] h-[50px] text-white font-semibold transition-colors duration-300 filter  hover:bg-slate-600 "
+                            onClick={handleCancelDelete}
+                          >
+                            NO, CANCEL
+                          </button>
+                          <button
+                            className=" bg-red-400 rounded-lg w-[150px] h-[50px] text-white font-semibold transition-colors duration-300 filter  hover:bg-red-600"
+                            onClick={handleConfirmDelete}
+                          >
+                            YES, DELETE
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+                <div className=" ml-4 ">
+                  <button
+                    className=" flex flex-row items-center  font-bold text-blue-600 h-7 ml-2 transition-all duration-300 filter  hover:brightness-150 "
+                    onClick={handleEdit}
+                  >
+                    <Image
+                      src="/images/icon-edit.svg"
+                      alt="img not found"
+                      width={30}
+                      height={30}
+                      className="flex w-4 h-4 mx-1"
+                    />
+                    Edit
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
       {/*REPLY */}
       {isReplying && (
         <div
-          className={`bg-white rounded-lg grid grid-flow-col justify-between my-2 p-5 ${width}`}
+          className={`bg-white rounded-lg flex flex-col md:flex-row justify-between my-2 p-5 ${width}`}
         >
-          <div className="">
+          <div className="hidden md:block">
             <Image
               src={currentUserImg}
               alt="img not found"
@@ -421,8 +506,25 @@ const Comment = ({
             className={`min-h-[100px] border-2 border-blue-600 rounded-lg p-2 ${textWidth}`}
             style={{ resize: "none" }}
           />
+          <div
+            className={`flex md:hidden flex-row justify-between  mt-2 ${width2}`}
+          >
+            <Image
+              src={currentUserImg}
+              alt="img not found"
+              width={50}
+              height={50}
+              className="w-10 h-auto"
+            />
+            <button
+              className=" bg-blue-600 rounded-lg w-[90px] h-[40px] text-white transition-colors duration-300 filter  hover:bg-blue-300 "
+              onClick={handleSendReply}
+            >
+              REPLY
+            </button>
+          </div>
           <button
-            className=" bg-blue-600 rounded-lg w-[90px] h-[40px] text-white transition-colors duration-300 filter  hover:bg-blue-300 "
+            className=" hidden md:block bg-blue-600 rounded-lg w-[90px] h-[40px] text-white transition-colors duration-300 filter  hover:bg-blue-300 "
             onClick={handleSendReply}
           >
             REPLY

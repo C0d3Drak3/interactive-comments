@@ -19,18 +19,18 @@ const Comments = () => {
   }, []);
 
   const handleAddComment = (newCommentPost) => {
-    // Copiar el array de comentarios actual para evitar mutar el estado directamente
+    // Copia el array de comentarios actual para evitar mutar el estado directamente
     const updatedComments = [...comments, newCommentPost];
 
-    // Actualizar el estado de los comentarios
+    // Actualiza el estado de los comentarios
     setComments(updatedComments);
 
-    // Guardar los cambios en el localStorage
+    // Guarda los cambios en el localStorage
     setItem({ ...getItem(), comments: updatedComments });
   };
 
   const handleVoteComment = (commentId, voteType) => {
-    // Verificar si el usuario actual ha votado por el comentario principal
+    // Verifica si el usuario actual ha votado por el comentario principal
     const currentUserVotes = currentUser.votes || [];
     const existingVote = currentUserVotes.find(
       (vote) => vote.commentId === commentId
@@ -39,9 +39,9 @@ const Comments = () => {
     // Función para actualizar los votos en el comentario principal y sus respuestas
     const updateVotes = (comments) => {
       return comments.map((comment) => {
-        // Verificar si el comentario actual es el comentario principal
+        // Verifica si el comentario actual es el comentario principal
         if (comment.id === commentId) {
-          // Determinar el incremento o decremento del puntaje del comentario
+          // Determina el incremento o decremento del puntaje del comentario
           let scoreChange = 0;
           if (!existingVote) {
             // Si el usuario no ha votado antes por este comentario, aplicar +1 o -1
@@ -50,19 +50,19 @@ const Comments = () => {
             // Si el usuario cambia su voto, aplicar +2 o -2
             scoreChange = voteType === "up" ? 2 : -2;
           }
-          // Actualizar el voto del comentario principal
+          // Actualiza el voto del comentario principal
           const updatedComment = {
             ...comment,
             score: comment.score + scoreChange,
           };
           return updatedComment;
         }
-        // Verificar si el comentario actual tiene respuestas
+        // Verifica si el comentario actual tiene respuestas
         if (comment.replies && comment.replies.length > 0) {
-          // Actualizar el voto en las respuestas correspondientes
+          // Actualiza el voto en las respuestas correspondientes
           const updatedReplies = comment.replies.map((reply) => {
             if (reply.id === commentId) {
-              // Actualizar el voto de la respuesta
+              // Actualiza el voto de la respuesta
               let scoreChange = 0;
               if (!existingVote) {
                 // Si el usuario no ha votado antes por este comentario, aplicar +1 o -1
@@ -78,13 +78,13 @@ const Comments = () => {
             }
             return reply;
           });
-          // Devolver el comentario actualizado con las respuestas actualizadas
+          // Devuelve el comentario actualizado con las respuestas actualizadas
           return {
             ...comment,
             replies: updatedReplies,
           };
         }
-        // Devolver el comentario sin cambios si no es el comentario principal ni tiene respuestas
+        // Devuelve el comentario sin cambios si no es el comentario principal ni tiene respuestas
         return comment;
       });
     };
@@ -156,22 +156,22 @@ const Comments = () => {
   };
 
   const handleDeleteComment = (commentId) => {
-    // Find the comment to delete
+    // Busca el comentario a borrar
     const updatedComments = comments
       .map((comment) => {
         if (comment.id === commentId) {
-          // If the comment matches the ID, return null to mark it for deletion
+          // Si la id del comentario es igual a la ID provista, regresa null y lo marca para borrar
           return null;
         } else if (comment.replies) {
-          // Check if the comment has replies and search for the comment to delete
+          // Busco si tiene un array de replies y si alguno de estos tiene el ID correspondiente
           const updatedReplies = comment.replies.map((reply) => {
             if (reply.id === commentId) {
-              // If the reply matches the ID, return null to mark it for deletion
+              // Si la id del comentario es igual a la ID provista, regresa null y lo marca para borrar
               return null;
             }
             return reply;
           });
-          // Return the comment with updated replies
+          // Regresa el commentario con las respuestas actualizadas
           return {
             ...comment,
             replies: updatedReplies.filter((reply) => reply !== null),
@@ -179,31 +179,31 @@ const Comments = () => {
         }
         return comment;
       })
-      .filter((comment) => comment !== null); // Remove marked comments
+      .filter((comment) => comment !== null); // Remueve el comentario marcado
 
-    // Update the comments state and save to localStorage
+    // Actualiza el estado de comments y lo guarda en localStorage
     setComments(updatedComments);
     setItem({ currentUser, comments: updatedComments });
   };
 
   const handleSendReply = (parentCommentId, newReply) => {
-    // Find the parent comment
+    // Encuentra el comentario principal (parent)
     console.log("Handle Send Reply to:" + parentCommentId);
     const parentComment = comments.find(
       (comment) => comment.id === parentCommentId
     );
     if (parentComment) {
-      // Add the new reply to the parent comment's replies
+      // Agrega la nueva reply al comentario principal (parent)
       const updatedParentComment = {
         ...parentComment,
         replies: [...(parentComment.replies || []), newReply],
       };
-      // Update the comments array with the modified parent comment
+      // Actualiza el array de comments
       const updatedComments = comments.map((comment) =>
         comment.id === parentCommentId ? updatedParentComment : comment
       );
       setComments(updatedComments);
-      // Save the updated comments to localStorage
+      // Guarda la actualización en localStorage
       setItem({ ...getItem(), comments: updatedComments });
     }
   };
