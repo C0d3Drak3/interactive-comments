@@ -33,8 +33,8 @@ Users should be able to:
 
 ### Links
 
-- Solution URL: [Add solution URL here](https://your-solution-url.com)
-- Live Site URL: [Vercel Deploy](https://interactive-comments-six.vercel.app)
+- Solution URL: [Frontend Mentor Solution Site](https://www.frontendmentor.io/solutions/interactive-comments-section-teup-Hwimw)
+- Live Site URL: [Vercel Deploy](https://interactive-comments-otero.vercel.app)
 
 ## My process
 
