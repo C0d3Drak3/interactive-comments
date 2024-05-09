@@ -276,7 +276,7 @@ const Comment = ({
                       />
                       Delete
                     </button>
-                    {/* Renderizar el modal de confirmación */}
+                    {/* MODAL */}
                     {showModal && (
                       <div className="fixed inset-0 flex items-center justify-center z-10 bg-black/50">
                         <div className=" bg-white rounded-lg  w-[400px] h-[270px] p-9">
@@ -433,10 +433,10 @@ const Comment = ({
                     />
                     Delete
                   </button>
-                  {/* Renderizar el modal de confirmación */}
+                  {/* MOBILE MODAL */}
                   {showModal && (
                     <div className="fixed inset-0 flex items-center justify-center z-10 bg-black/50">
-                      <div className=" bg-white rounded-lg  w-[400px] h-[270px] p-9">
+                      <div className=" bg-white rounded-lg w-[340px] md:w-[400px] h-[240px]  md:h-[270px] p-5 md:p-9">
                         <h1 className=" font-bold text-2xl text-gray-700">
                           Delete comment
                         </h1>
@@ -446,13 +446,13 @@ const Comment = ({
                         </p>
                         <div className="flex flex-row justify-between">
                           <button
-                            className=" bg-slate-400 rounded-lg w-[150px] h-[50px] text-white font-semibold transition-colors duration-300 filter  hover:bg-slate-600 "
+                            className=" bg-slate-400 rounded-lg w-[130px] md:w-[150px] h-[50px] text-white font-semibold transition-colors duration-300 filter  hover:bg-slate-600 "
                             onClick={handleCancelDelete}
                           >
                             NO, CANCEL
                           </button>
                           <button
-                            className=" bg-red-400 rounded-lg w-[150px] h-[50px] text-white font-semibold transition-colors duration-300 filter  hover:bg-red-600"
+                            className=" bg-red-400 rounded-lg w-[130px] md:w-[150px] h-[50px] text-white font-semibold transition-colors duration-300 filter  hover:bg-red-600"
                             onClick={handleConfirmDelete}
                           >
                             YES, DELETE
